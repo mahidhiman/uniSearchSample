@@ -8,9 +8,7 @@ const PocketbaseContext = createContext(pb);
 function App() {
   return (
     <>
-      <PocketbaseContext.Provider value={pb}>
-        <Login></Login>
-      </PocketbaseContext.Provider>
+      <PocketbaseContext.Provider value={pb}></PocketbaseContext.Provider>
     </>
   );
 }
