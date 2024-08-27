@@ -1,7 +1,9 @@
-import React from "react";
+import { useContext } from "react";
+import { PocketbaseContext } from "../App";
 
 const Dashboard = () => {
-  return <div></div>;
+  const pb = useContext(PocketbaseContext);
+  return <div>Hello {pb.authStore.model?.id}</div>;
 };
 
 export default Dashboard;
