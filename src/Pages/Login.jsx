@@ -8,22 +8,12 @@ const Login = () => {
     password: "",
   });
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    async function authenticate() {
-      try {
-        console.log(form.email, form.password);
-        let results = await pb.collections("Users").getFullList({
-          sort: "-created",
-        });
+    console.log(form.email, form.password);
+    const data = await pb.collection("users").authWithPassword("newUser", "Password@123");
 
-        console.log(results);
-      } catch (e) {
-        console.log({ ...e });
-      }
-    }
-
-    authenticate();
+    console.log(data, "hello world");
   };
 
   const onChange = (e) => {
