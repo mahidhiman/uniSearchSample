@@ -4,7 +4,7 @@ import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import pb from "./Components/Pockebase";
 import Dashboard from "./Pages/Dashboard";
-
+import AddLeed from "./Components/AddLeed";
 const PocketbaseContext = createContext(pb);
 
 function App() {
@@ -17,6 +17,7 @@ function App() {
             <Route path="/" element={<Login />}></Route>
             <Route path="/login" element={<Login />}></Route>
             <Route path="/signup" element={<Signup />}></Route>
+            <Route path="/newLead" element={<AddLeed />}></Route>
           </Routes>
         </Router>
       </PocketbaseContext.Provider>
