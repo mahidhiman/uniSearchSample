@@ -1,19 +1,41 @@
 import { useContext, useEffect, useState } from "react";
 import { PocketbaseContext } from "../App";
-import { Navigate } from "react-router-dom";
+import { useNavigate, Navigate, Link } from "react-router-dom";
+import Alert from "../Components/Alert";
 const Login = () => {
   const pb = useContext(PocketbaseContext);
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    console.log(form.email, form.password);
-    const data = await pb.collection("users").authWithPassword("newUser", "Password@123");
+    try {
+      // console.log(form.email, form.password);
+      await pb.collection("users").authWithPassword(form.email, form.password);
 
-    console.log(data, "hello world");
+      navigate("/");
+    } catch (e) {
+      let data = Object.keys(e.data.data);
+      let array = data.map((i) => e.data.data[i]);
+      const errorObject = {
+        message: e.data.message,
+        data:
+          array.length < 1
+            ? [{ message: "Please check your credentials carefully and try again" }]
+            : array.map((i) => {
+                return { message: i };
+              }),
+      };
+
+      setError(errorObject);
+      setTimeout(() => {
+        setError("");
+      }, 4000);
+    }
   };
 
   const onChange = (e) => {
@@ -28,7 +50,7 @@ const Login = () => {
   useEffect(() => {}, []);
   return (
     <>
-      {pb.authStore.model && <Navigate to="/dashboard" replace={true} />}
+      {pb.authStore.model?.id && <Navigate to="/dashboard" replace={true} />}
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
@@ -40,6 +62,7 @@ const Login = () => {
             Sign in to your Account!!
           </h2>
         </div>
+        <div className="w-68 flex justify-center">{error && <Alert message={error} />}</div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form
@@ -99,9 +122,9 @@ const Login = () => {
           </form>
           <p className="mt-10 text-center text-sm text-gray-500">
             Not A Member?{" "}
-            <a href="" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+            <Link to="/signup" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
               Start with a free trial now
-            </a>
+            </Link>
           </p>
         </div>
       </div>

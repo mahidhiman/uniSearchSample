@@ -1,6 +1,7 @@
 import { createContext } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./Pages/Login";
+import Signup from "./Pages/Signup";
 import pb from "./Components/Pockebase";
 import Dashboard from "./Pages/Dashboard";
 
@@ -15,6 +16,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />}></Route>
             <Route path="/" element={<Login />}></Route>
             <Route path="/login" element={<Login />}></Route>
+            <Route path="/signup" element={<Signup />}></Route>
           </Routes>
         </Router>
       </PocketbaseContext.Provider>
