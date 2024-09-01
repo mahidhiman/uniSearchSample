@@ -18,3 +18,32 @@
   "scholorships": "",
   "link": ""
 }
+
+{
+    "country": "United Kingdom",
+    "coursename": "MSc Management",
+    "expand": {
+        "requirements": {
+            "Scores": 60,
+
+            "expand": {
+                "ielts": {
+
+                    "listening": 6,
+                    "overall": 6.5,
+                    "reading": 6,
+                    "speaking": 6,
+                    "writing": 6
+                }
+            },
+
+        },
+        "university": {
+
+            "name": "Essex University",
+        }
+    },
+    "fee": 20000,
+    "imageUrl": "",
+    "link": "https://www.essex.ac.uk/courses/PG00670/1/MSc-Management",
+}

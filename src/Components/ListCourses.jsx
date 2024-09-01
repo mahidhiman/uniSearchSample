@@ -6,11 +6,13 @@ import pb from "./Pockebase";
 const ListCourses = () => {
   const [open, setOpen] = useState(false);
   const [country, setCountry] = useState("");
+  const staticData = [];
   const [courses, setCourses] = useState([
     {
       university: {
         name: "Essex",
       },
+      id: 1,
       coursename: "MSc Management",
       country: "United kingdom",
       requirements: {
@@ -39,16 +41,39 @@ const ListCourses = () => {
   });
 
   useEffect(() => {
-    const fetchUniversity = async () => {
-      let results = await pb.collection("courses").getOne("rzmptbuhzhwljaa", {
-        fields: "id,coursename,university.name,requirements.Scores,requirements.ielts,fee,imageUrl,link",
+    pb.collection("courses")
+      .getFullList({ expand: "university, requirements, requirements.ielts" })
+      .then((res) => {
+        setCourses(
+          res.map((i) => {
+            return {
+              university: {
+                name: i.expand.university.name,
+              },
+              id: i.id,
+              coursename: i.coursename,
+              country: i.country,
+              requirements: {
+                IELTS: {
+                  reading: i.expand.requirements.expand.ielts.reading,
+                  writing: i.expand.requirements.expand.ielts.writing,
+                  speaking: i.expand.requirements.expand.ielts.speaking,
+                  listening: i.expand.requirements.expand.ielts.listening,
+                  overall: i.expand.requirements.expand.ielts.overall,
+                },
+                scores: i.expand.requirements.Scores,
+              },
+              fee: i.fee,
+              imageUrl:
+                "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
+
+              scholorships: "",
+              link: "",
+            };
+          })
+        );
       });
-
-      console.log(results);
-    };
-
-    fetchUniversity();
-  }, []);
+  }, [staticData]);
 
   const onChange = (e) => {
     setIelts((prevState) => {
@@ -192,13 +217,13 @@ const ListCourses = () => {
         <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {courses.map((course) => (
             <>
-              <li key={course.name} className="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow">
+              <li key={course.id} className="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow">
                 <div className="flex w-full items-center justify-between space-x-6 p-6">
                   <div className="flex-1 truncate">
                     <div className="flex items-center space-x-3">
-                      <h3 className="truncate text-sm font-medium text-gray-900">{course.university.name}</h3>
+                      <h3 className="truncate text-sm font-medium text-gray-900">{course.university?.name}</h3>
                       <span className="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                        {course.fee}
+                        £{course.fee}
                       </span>
                     </div>
                     <p className="mt-3 truncate text-sm text-gray-500">{course.coursename}</p>
