@@ -1,11 +1,11 @@
-import { useEffect, useState, useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import PocketBaseContext from "../App";
+import { PocketbaseContext } from "../App";
 
 const ListUsers = () => {
   const navigate = useNavigate();
   const [leeds, setLeeds] = useState([]);
-  const pb = useContext(PocketBaseContext);
+  const pb = useContext(PocketbaseContext);
 
   const viewLeed = (id) => {
     navigate("/user/" + id);
@@ -14,6 +14,17 @@ const ListUsers = () => {
   const addUser = () => {
     navigate("/newLead");
   };
+
+  useState(() => {
+    let fetchLeads = async () => {
+      let results = await pb.collection("users").getFullList({});
+      setLeeds(results);
+
+      console.log(results);
+    };
+
+    fetchLeads();
+  }, []);
 
   return (
     <>
@@ -64,7 +75,7 @@ const ListUsers = () => {
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">{leed.id}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{leed.Username}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{leed.Phone}</td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{leed.Email}</td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{leed.email}</td>
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                         <button onClick={() => viewLeed(leed.id)}>
                           <a className="text-indigo-600 hover:text-indigo-900">

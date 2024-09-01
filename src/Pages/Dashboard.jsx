@@ -1,10 +1,11 @@
 import { useContext } from "react";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { PocketbaseContext } from "../App";
 import ListUsers from "../Components/ListUsers";
+import ListCourses from "../Components/ListCourses";
 
-import { useState } from "react";
 import { Dialog, DialogBackdrop, DialogPanel, Menu, MenuButton, MenuItem, MenuItems, TransitionChild } from "@headlessui/react";
+import { ChevronDownIcon, MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import {
   Bars3Icon,
   BellIcon,
@@ -17,7 +18,7 @@ import {
   UsersIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { ChevronDownIcon, MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import { useState } from "react";
 
 const teams = [
   { id: 1, name: "Heroicons", href: "#", initial: "H", current: false },
@@ -47,7 +48,7 @@ const Dashboard = () => {
   const [navigation, setNavigation] = useState([
     { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
     { name: "Leads", href: "#", icon: UsersIcon, current: false },
-    { name: "Projects", href: "#", icon: FolderIcon, current: false },
+    { name: "Courses", href: "#", icon: FolderIcon, current: false },
     { name: "Calendar", href: "#", icon: CalendarIcon, current: false },
     { name: "Documents", href: "#", icon: DocumentDuplicateIcon, current: false },
     { name: "Reports", href: "#", icon: ChartPieIcon, current: false },
@@ -301,6 +302,7 @@ const Dashboard = () => {
           <main className="py-10">
             <div className="px-4 sm:px-6 lg:px-8">
               {navigation[1].name == "Leads" && navigation[1].current == true && <ListUsers />}
+              {navigation[2].name == "Courses" && navigation[2].current == true && <ListCourses />}
             </div>
           </main>
         </div>

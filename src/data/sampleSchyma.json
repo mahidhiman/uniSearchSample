@@ -1,0 +1,20 @@
+{
+  "university": {
+    "name": "Essex"
+  },
+  "coursename": "MSc Management",
+  "country": "United kingdom",
+  "requirements": {
+    "IELTS": {
+      "reading": 6,
+      "writing": 6,
+      "speaking": 6,
+      "listening": 6,
+      "overall": 6.5
+    },
+    "scores": 60
+  },
+  "fee": 20000,
+  "scholorships": "",
+  "link": ""
+}
