@@ -1,12 +1,12 @@
 import { Button } from "@headlessui/react";
 import { useEffect, useState } from "react";
-import { MagnifyingGlassIcon, FunnelIcon, GlobeAmericasIcon, EnvelopeOpenIcon } from "@heroicons/react/20/solid";
+import { MagnifyingGlassIcon, FunnelIcon, GlobeAmericasIcon, EnvelopeOpenIcon, ArrowPathIcon } from "@heroicons/react/20/solid";
 import pb from "./Pockebase";
 
 const ListCourses = () => {
   const [open, setOpen] = useState(false);
-  const [country, setCountry] = useState("");
-  const staticData = [];
+  const [country, setCountry] = useState("United Kingdom");
+  const [searchQuery, setSearchQuery] = useState("");
   const [courses, setCourses] = useState([
     {
       university: {
@@ -40,7 +40,7 @@ const ListCourses = () => {
     o: 0,
   });
 
-  useEffect(() => {
+  const fetchCourses = () => {
     pb.collection("courses")
       .getFullList({ expand: "university, requirements, requirements.ielts" })
       .then((res) => {
@@ -73,7 +73,11 @@ const ListCourses = () => {
           })
         );
       });
-  }, [staticData]);
+  };
+
+  useEffect(() => {
+    fetchCourses();
+  }, []);
 
   const onChange = (e) => {
     setIelts((prevState) => {
@@ -88,7 +92,28 @@ const ListCourses = () => {
     setCountry(e.target.value);
   };
 
-  const search = () => {};
+  const onQuery = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const search = async () => {
+    setCourses(
+      courses.filter((i) => {
+        if (searchQuery.length < 1 && ielts.w == 0 && ielts.r == 0 && ielts.s == 0 && ielts.l == 0 && ielts.o == 0) {
+          return i;
+        } else {
+          return (
+            (searchQuery === i.university.name || searchQuery === i.coursename) &&
+            (ielts.w == 0 ? true : ielts.w >= i.requirements.IELTS.writing) &&
+            (ielts.r == 0 ? true : ielts.r >= i.requirements.IELTS.reading) &&
+            (ielts.s == 0 ? true : ielts.s >= i.requirements.IELTS.speaking) &&
+            (ielts.l == 0 ? true : ielts.l >= i.requirements.IELTS.listening) &&
+            (ielts.o == 0 ? true : ielts.o >= i.requirements.IELTS.overall)
+          );
+        }
+      })
+    );
+  };
 
   return (
     <div>
@@ -100,6 +125,8 @@ const ListCourses = () => {
           id="search"
           name="search"
           type="text"
+          onChange={onQuery}
+          value={searchQuery}
           className="block w-full rounded-md border-0 py-1.5 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
         />
         <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
@@ -118,18 +145,34 @@ const ListCourses = () => {
             <FunnelIcon aria-hidden="true" className="h-4 w-4 ml-4 text-center shrink-0 text-gray-900 group-hover:text-white" />
           </span>
         </Button>
-        <Button
-          onClick={search}
-          className="group text-sm text-gray-800 font-semibold leading-6 transition duration-300  border rounded-lg border-solid border-black my-2 px-2 py-2 hover:bg-indigo-500 hover:text-white hover:border-none"
-        >
-          <span className=" flex flex-row items-center">
-            Search{" "}
-            <MagnifyingGlassIcon
-              aria-hidden="true"
-              className="h-4 w-4 ml-4 text-center shrink-0 text-gray-900 group-hover:text-white"
-            />
-          </span>
-        </Button>
+        <div>
+          <Button
+            onClick={search}
+            className="mr-4 group text-sm text-gray-800 font-semibold leading-6 transition duration-300  border rounded-lg border-solid border-black my-2 px-2 py-2 hover:bg-indigo-500 hover:text-white hover:border-none"
+          >
+            <span className=" flex flex-row items-center">
+              Search{" "}
+              <MagnifyingGlassIcon
+                aria-hidden="true"
+                className="h-4 w-4 ml-4 text-center shrink-0 text-gray-900 group-hover:text-white"
+              />
+            </span>
+          </Button>
+          <Button
+            onClick={() => {
+              fetchCourses();
+            }}
+            className="group text-sm text-gray-800 font-semibold leading-6 transition duration-300  border rounded-lg border-solid border-black my-2 px-2 py-2 hover:bg-indigo-500 hover:text-white hover:border-none"
+          >
+            <span className=" flex flex-row items-center">
+              Reset{" "}
+              <ArrowPathIcon
+                aria-hidden="true"
+                className="h-4 w-4 ml-4 text-center shrink-0 text-gray-900 group-hover:text-white"
+              />
+            </span>
+          </Button>
+        </div>
       </div>
       {
         <div
@@ -150,7 +193,7 @@ const ListCourses = () => {
                   onChange={onCountryChange}
                   className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 >
-                  <option>United Kingdome</option>
+                  <option>United Kingdom</option>
                   <option>Canada</option>
                 </select>
               </div>
