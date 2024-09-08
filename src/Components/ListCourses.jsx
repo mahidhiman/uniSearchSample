@@ -44,37 +44,38 @@ const ListCourses = () => {
     pb.collection("courses")
       .getFullList({ expand: "university, requirements, requirements.ielts" })
       .then((res) => {
-        setCourses(
-          res.map((i) => {
-            return {
-              university: {
-                name: i.expand.university.name,
-              },
-              id: i.id,
-              coursename: i.coursename,
-              country: i.country,
-              requirements: {
-                IELTS: {
-                  reading: i.expand.requirements.expand.ielts.reading,
-                  writing: i.expand.requirements.expand.ielts.writing,
-                  speaking: i.expand.requirements.expand.ielts.speaking,
-                  listening: i.expand.requirements.expand.ielts.listening,
-                  overall: i.expand.requirements.expand.ielts.overall,
-                },
-                scores: i.expand.requirements.Scores,
-              },
-              fee: i.fee,
-              imageUrl:
-                "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
-
-              scholorships: "",
-              link: "",
-            };
-          })
-        );
+        setCourses(courseFilterToCouseObjectArray(res));
       });
   };
 
+  const courseFilterToCouseObjectArray = (array) => {
+    return array.map((i) => {
+      return {
+        university: {
+          name: i.expand.university.name,
+        },
+        id: i.id,
+        coursename: i.coursename,
+        country: i.country,
+        requirements: {
+          IELTS: {
+            reading: i.expand.requirements.expand.ielts.reading,
+            writing: i.expand.requirements.expand.ielts.writing,
+            speaking: i.expand.requirements.expand.ielts.speaking,
+            listening: i.expand.requirements.expand.ielts.listening,
+            overall: i.expand.requirements.expand.ielts.overall,
+          },
+          scores: i.expand.requirements.Scores,
+        },
+        fee: i.fee,
+        imageUrl:
+          "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
+
+        scholorships: "",
+        link: "",
+      };
+    });
+  };
   useEffect(() => {
     fetchCourses();
   }, []);
